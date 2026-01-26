@@ -1,0 +1,12 @@
+{
+  "name": "elearning",
+  "private": true,
+  "scripts": {
+    "back": "cd back && symfony server:start",
+    "front": "cd front && npm start",
+    "dev": "concurrently \"npm run back\" \"npm run front\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
