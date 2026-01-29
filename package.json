@@ -8,5 +8,9 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "react-router-dom": "^7.13.0",
+    "vite-plugin-pages": "^0.33.2"
   }
 }
