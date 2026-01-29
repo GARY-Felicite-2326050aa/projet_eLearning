@@ -7,14 +7,16 @@ interface AuthCardProps {
     subtitle?: string;
     children: ReactNode;
     submitLabel: string;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export default function AuthCard({
-                                     title,
-                                     subtitle,
-                                     children,
-                                     submitLabel,
-                                 }: AuthCardProps) {
+    title,
+    subtitle,
+    children,
+    submitLabel,
+    onSubmit,
+}: AuthCardProps) {
     return (
         <div className={styles.page}>
             <div className={styles.card}>
@@ -25,7 +27,13 @@ export default function AuthCard({
                 </div>
 
                 {/* Form */}
-                <form className={styles.form}>
+                <form
+                    className={styles.form}
+                    onSubmit={(e) => {
+                        console.log("[AuthCard] form submit event triggered");
+                        onSubmit(e);
+                    }}
+                >
                     {children}
 
                     <button type="submit" className={styles.submit}>
