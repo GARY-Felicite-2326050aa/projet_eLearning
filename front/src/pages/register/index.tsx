@@ -2,9 +2,11 @@ import { useState } from "react";
 import styles from "../login/page.module.css";
 import {useAuth} from "../../features/auth/hooks/useAuth";
 import AuthCard from "../../features/auth/components/AuthCard";
+import {useNavigate} from "react-router-dom";
 
 export default function Page() {
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ export default function Page() {
 
     try {
       await register({ name, email, password });
-      console.log("User registered");
+      navigate("/");
     } catch (err) {
       console.error("Register failed", err);
     }
