@@ -14,10 +14,11 @@ class AuthController extends AbstractController
 {
     #[Route('/api/register', name: 'api_register', methods: ['POST'])]
     public function register(
-        Request $request,
-        EntityManagerInterface $em,
+        Request                     $request,
+        EntityManagerInterface      $em,
         UserPasswordHasherInterface $hasher
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['email'], $data['password'])) {
@@ -37,4 +38,3 @@ class AuthController extends AbstractController
         return $this->json(['message' => 'User created'], 201);
     }
 }
-
