@@ -36,7 +36,21 @@ class AuthController extends AbstractController
 
         return $this->json(['message' => 'User created'], 201);
     }
+    #[Route('/api/me', name: 'api_me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+        // The user is automatically resolved from the JWT token
+        $user = $this->getUser();
 
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->json([
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+        ]);
+    }
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function login(
         Request $request,
@@ -62,3 +76,4 @@ class AuthController extends AbstractController
         ]);
     }
 }
+
