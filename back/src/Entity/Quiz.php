@@ -18,16 +18,18 @@ class Quiz
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title;
 
     #[ORM\ManyToOne(inversedBy: 'quizzes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Course $course = null;
+    private Course $course;
 
-    /**
-     * @var Collection<int, Question>
-     */
-    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'quiz')]
+    #[ORM\OneToMany(
+        mappedBy: 'quiz',
+        targetEntity: Question::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
     private Collection $questions;
 
     public function __construct()
@@ -40,39 +42,34 @@ class Quiz
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
-
         return $this;
     }
 
-    public function getCourse(): ?Course
+    public function getCourse(): Course
     {
         return $this->course;
     }
 
-    public function setCourse(?Course $course): static
+    public function setCourse(Course $course): self
     {
         $this->course = $course;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Question>
-     */
     public function getQuestions(): Collection
     {
         return $this->questions;
     }
 
-    public function addQuestion(Question $question): static
+    public function addQuestion(Question $question): self
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
@@ -82,13 +79,10 @@ class Quiz
         return $this;
     }
 
-    public function removeQuestion(Question $question): static
+    public function removeQuestion(Question $question): self
     {
         if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getQuiz() === $this) {
-                $question->setQuiz(null);
-            }
+            $question->setQuiz(null);
         }
 
         return $this;

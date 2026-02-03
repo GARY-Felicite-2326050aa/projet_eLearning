@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -18,17 +17,19 @@ class Question
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
+    #[ORM\Column(type: 'text')]
+    private string $content;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Quiz $quiz = null;
+    private Quiz $quiz;
 
-    /**
-     * @var Collection<int, Answer>
-     */
-    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
+    #[ORM\OneToMany(
+        mappedBy: 'question',
+        targetEntity: Answer::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
     private Collection $answers;
 
     public function __construct()
@@ -41,39 +42,34 @@ class Question
         return $this->id;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(string $content): self
     {
         $this->content = $content;
-
         return $this;
     }
 
-    public function getQuiz(): ?Quiz
+    public function getQuiz(): Quiz
     {
         return $this->quiz;
     }
 
-    public function setQuiz(?Quiz $quiz): static
+    public function setQuiz(Quiz $quiz): self
     {
         $this->quiz = $quiz;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Answer>
-     */
     public function getAnswers(): Collection
     {
         return $this->answers;
     }
 
-    public function addAnswer(Answer $answer): static
+    public function addAnswer(Answer $answer): self
     {
         if (!$this->answers->contains($answer)) {
             $this->answers->add($answer);
@@ -83,13 +79,10 @@ class Question
         return $this;
     }
 
-    public function removeAnswer(Answer $answer): static
+    public function removeAnswer(Answer $answer): self
     {
         if ($this->answers->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
-            if ($answer->getQuestion() === $this) {
-                $answer->setQuestion(null);
-            }
+            $answer->setQuestion(null);
         }
 
         return $this;

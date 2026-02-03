@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
@@ -19,15 +18,17 @@ class Course
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    #[ORM\Column(type: 'text')]
+    private string $description;
 
-    /**
-     * @var Collection<int, Quiz>
-     */
-    #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'course')]
+    #[ORM\OneToMany(
+        mappedBy: 'course',
+        targetEntity: Quiz::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
     private Collection $quizzes;
 
     public function __construct()
@@ -40,39 +41,34 @@ class Course
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
-
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Quiz>
-     */
     public function getQuizzes(): Collection
     {
         return $this->quizzes;
     }
 
-    public function addQuiz(Quiz $quiz): static
+    public function addQuiz(Quiz $quiz): self
     {
         if (!$this->quizzes->contains($quiz)) {
             $this->quizzes->add($quiz);
@@ -82,13 +78,10 @@ class Course
         return $this;
     }
 
-    public function removeQuiz(Quiz $quiz): static
+    public function removeQuiz(Quiz $quiz): self
     {
         if ($this->quizzes->removeElement($quiz)) {
-            // set the owning side to null (unless already changed)
-            if ($quiz->getCourse() === $this) {
-                $quiz->setCourse(null);
-            }
+            $quiz->setCourse(null);
         }
 
         return $this;
