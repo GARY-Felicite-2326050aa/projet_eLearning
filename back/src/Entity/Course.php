@@ -31,9 +31,27 @@ class Course
     )]
     private Collection $quizzes;
 
+    #[ORM\OneToMany(
+        targetEntity: Document::class,
+        mappedBy: 'course',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $documents;
+
+    #[ORM\OneToMany(
+        targetEntity: Video::class,
+        mappedBy: 'course',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $videos;
+
     public function __construct()
     {
         $this->quizzes = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -82,6 +100,58 @@ class Course
     {
         if ($this->quizzes->removeElement($quiz)) {
             $quiz->setCourse(null);
+        }
+
+        return $this;
+    }
+
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            if ($document->getCourse() === $this) {
+                $document->setCourse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            if ($video->getCourse() === $this) {
+                $video->setCourse(null);
+            }
         }
 
         return $this;
