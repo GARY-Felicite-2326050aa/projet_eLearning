@@ -1,27 +1,37 @@
 import { useEffect, useState } from "react";
 import type {Course} from "../../features/course/type/Course";
-import api from "../../shared/lib/axios";
-import CourseCard from "../../features/course/components/CourseCard";
+import {getCourses} from "../../features/course/api/courses.api";
 
-const Courses: React.FC = () => {
+const Page = () => {
     const [courses, setCourses] = useState<Course[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        api.get("/courses").then((res) => {
-            setCourses(res.data["hydra:member"]);
-        });
-    }, []);
+        getCourses()
+            .then(setCourses)
+            .finally(() => setLoading(false));
+
+    }, [courses]);
+
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <div className="p-8">
-            <h1 className="text-2xl font-bold mb-6">📚 Vidéos de cours</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {courses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
-                ))}
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+            {courses.map(course => (
+                <div
+                    key={course.id}
+                    className="border rounded-xl p-4 shadow hover:shadow-lg transition"
+                >
+                    <h2 className="text-xl font-bold mb-2">
+                        {course.title}
+                    </h2>
+                    <p className="text-gray-600">
+                        {course.description}
+                    </p>
+                </div>
+            ))}
         </div>
     );
 };
 
-export default Courses;
+export default Page;
