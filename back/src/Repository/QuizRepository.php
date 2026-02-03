@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Qcm;
+use App\Entity\Quiz;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Qcm>
+ * @extends ServiceEntityRepository<Quiz>
  */
-class QcmRepository extends ServiceEntityRepository
+class QuizRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Qcm::class);
+        parent::__construct($registry, Quiz::class);
     }
 
 //    /**
-//     * @return Qcm[] Returns an array of Qcm objects
+//     * @return Quiz[] Returns an array of Quiz objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -31,7 +31,7 @@ class QcmRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Qcm
+//    public function findOneBySomeField($value): ?Quiz
 //    {
 //        return $this->createQueryBuilder('q')
 //            ->andWhere('q.exampleField = :val')
