@@ -24,8 +24,8 @@ class Course
     private string $description;
 
     #[ORM\OneToMany(
-        mappedBy: 'course',
         targetEntity: Quiz::class,
+        mappedBy: 'course',
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
