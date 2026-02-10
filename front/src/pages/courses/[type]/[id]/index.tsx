@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getCourses } from "../../course/api/courses.api";
-import type { Course } from "../../course/type/Course";
-import ResourceCard from "../../course/components/ResourceCard"
+import { getCourses } from "../../../../features/courses/api/courses.api"
+import type { Course } from "../../../../features/courses/type/Course"
+import ResourceCard from "../../../../features/courses/components/ResourceCard"; 
 
 export default function HomeStudent() {
     const [courses, setCourses] = useState<Course[]>([]);

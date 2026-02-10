@@ -9,7 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['course:read']] 
+)]
 class Course
 {
     #[ORM\Id]
@@ -18,9 +20,11 @@ class Course
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['course:read'])]
     private string $title;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['course:read'])]
     private string $description;
 
     #[ORM\OneToMany(
@@ -29,6 +33,7 @@ class Course
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['course:read'])]
     private Collection $quizzes;
 
     #[ORM\OneToMany(
@@ -37,6 +42,7 @@ class Course
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['course:read'])]
     private Collection $documents;
 
     #[ORM\OneToMany(
@@ -45,6 +51,7 @@ class Course
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['course:read'])]
     private Collection $videos;
 
     public function __construct()

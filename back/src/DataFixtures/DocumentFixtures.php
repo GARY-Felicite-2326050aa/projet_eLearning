@@ -1,41 +1,28 @@
 <?php
-
 namespace App\DataFixtures;
 
 use App\Entity\Document;
-use App\Entity\Course;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 class DocumentFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const DOCUMENT_REFERENCE = 'document_';
-
     public function load(ObjectManager $manager): void
     {
-        $course = $this->getReference(
-            CourseFixtures::COURSE_1,
-            Course::class
-        );
+        $doc = new Document();
+        $doc->setTitle('Support de cours React.pdf');
+        $doc->setFilePath('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+        
+        // On attache au cours React
+        $doc->setCourse($this->getReference(CourseFixtures::COURSE_REACT));
 
-        for ($i = 0; $i < 4; $i++) {
-            $document = new Document();
-            $document->setTitle('Document '.$i);
-            $document->setFilePath('uploads/documents/document_'.$i.'.pdf');
-            $document->setCourse($course);
-
-            $manager->persist($document);
-            $this->addReference(self::DOCUMENT_REFERENCE.$i, $document);
-        }
-
+        $manager->persist($doc);
         $manager->flush();
     }
 
     public function getDependencies(): array
     {
-        return [
-            CourseFixtures::class,
-        ];
+        return [CourseFixtures::class];
     }
 }
