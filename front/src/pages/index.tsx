@@ -1,6 +1,6 @@
 import HomeTeacher from "../features/teacher/components/HomeTeacher";
 import HomeStudent from "../features/student/components/HomeStudent";
-import {useAuthStore} from "../features/auth/store/auth.sotre";
+import {useAuthStore} from "../features/auth/store/auth.store";
 
 export default function Page() {
     const user = useAuthStore((state) => state.user);

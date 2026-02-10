@@ -1,5 +1,7 @@
+import TeacherDashboard from "../../../pages/teacher/TeacherDashboard";
+
 export default function HomeTeacher() {
     return (
-        <h1>Teacher</h1>
+        <TeacherDashboard/>
     )
 }

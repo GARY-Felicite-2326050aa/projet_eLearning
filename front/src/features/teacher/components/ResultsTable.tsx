@@ -7,7 +7,7 @@ export interface Result {
     qcm: string;
     date: string;
     score: string;
-    note: string; // 'Excellent', 'Bien', 'Moyen'
+    note: string;
 }
 
 interface ResultsTableProps {
