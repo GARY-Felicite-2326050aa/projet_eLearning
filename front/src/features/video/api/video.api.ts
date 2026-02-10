@@ -2,9 +2,12 @@ import api from "../../../shared/lib/axios";
 import type {VideoCollection} from "./video.type";
 import type {Video} from "../type/Video";
 
-export const getVideos = async (): Promise<VideoCollection> => {
+export const getVideos = async (courseId: number): Promise<Video[]> => {
     const response = await api.get<VideoCollection>("/api/videos");
-    return response.data;
+
+    return response.data.member.filter(
+        (video) => Number(video.course) === courseId
+    );
 };
 
 export const getVideo = async (id: number): Promise<Video> => {
