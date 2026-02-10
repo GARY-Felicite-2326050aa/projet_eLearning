@@ -1,38 +1,80 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import type {Course} from "../../../features/course/type/Course";
-import api from "../../../shared/lib/axios";
+import { getCourses } from "../../../../features/courses/api/courses.api"
+import type { Course } from "../../../../features/courses/type/Course"
+import ResourceCard from "../../../../features/courses/components/ResourceCard"; 
 
-const CourseDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const [course, setCourse] = useState<Course | null>(null);
+export default function HomeStudent() {
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        api.get(`/courses/${id}`).then((res) => setCourse(res.data));
-    }, [id]);
+        getCourses()
+            .then((res) => setCourses(res))
+            .finally(() => setLoading(false));
+    }, []);
 
-    if (!course) return null;
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div className="spinner-border text-primary" role="status"></div>
+            </div>
+        );
+    }
+
+    // Filtrage des cours
+    const videoCourses = courses.filter(c => c.videos && c.videos.length > 0);
+    const docCourses = courses.filter(c => c.documents && c.documents.length > 0);
 
     return (
-        <div className="p-8">
-            <h1 className="text-2xl font-bold">{course.title}</h1>
-            <p className="mb-6">{course.description}</p>
+        <div className="container py-5">
+            <header className="mb-5 border-bottom pb-3">
+                <h1 className="display-5 fw-bold text-dark">Espace Étudiant</h1>
+                <p className="lead text-secondary">Accédez à vos ressources pédagogiques.</p>
+            </header>
 
-            <h2 className="font-semibold mb-2">QCM disponibles</h2>
-            {course.quizzes.map((q) => {
-                const quizId = q.split("/").pop();
-                return (
-                    <Link
-                        key={q}
-                        to={`/quiz/${quizId}`}
-                        className="block bg-green-500 text-white px-4 py-2 rounded mb-2"
-                    >
-                        ✏️ Passer le QCM
-                    </Link>
-                );
-            })}
+            {/* --- SECTION VIDÉOS --- */}
+            <section className="mb-5">
+                <h3 className="fw-bold mb-4 text-primary">
+                    <i className="bi bi-play-circle-fill me-2"></i>Cours Vidéo
+                </h3>
+                {videoCourses.length === 0 ? (
+                    <div className="alert alert-light border">Aucun cours vidéo disponible.</div>
+                ) : (
+                    <div className="row g-4">
+                        {videoCourses.map((course) => (
+                            <div key={`vid-${course.id}`} className="col-md-6 col-lg-4">
+                                <ResourceCard 
+                                    type="video" 
+                                    course={course} 
+                                    resourceCount={course.videos.length} 
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
+
+            {/* --- SECTION DOCUMENTS --- */}
+            <section>
+                <h3 className="fw-bold mb-4 text-danger">
+                    <i className="bi bi-file-earmark-text-fill me-2"></i>Documents PDF
+                </h3>
+                {docCourses.length === 0 ? (
+                    <div className="alert alert-light border">Aucun document disponible.</div>
+                ) : (
+                    <div className="row g-4">
+                        {docCourses.map((course) => (
+                            <div key={`doc-${course.id}`} className="col-md-6 col-lg-4">
+                                <ResourceCard 
+                                    type="document" 
+                                    course={course} 
+                                    resourceCount={course.documents.length} 
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
         </div>
     );
-};
-
-export default CourseDetail;
+}

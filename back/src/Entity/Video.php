@@ -17,9 +17,11 @@ class Video
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['course:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['course:read'])]
     private ?string $urlPath = null;
 
     #[ORM\ManyToOne(inversedBy: 'videos')]

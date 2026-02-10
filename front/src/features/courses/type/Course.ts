@@ -1,10 +1,22 @@
+export interface Video {
+    id: number;
+    title: string;
+    urlPath: string; // Doit matcher ton API PHP
+}
+
+export interface DocumentResource { 
+    id: number;
+    title: string;
+    filePath: string; // Doit matcher ton API PHP
+}
+
 export interface Course {
     id: number;
     title: string;
     description: string;
-    quizzes: string[];
-    document:string[];
-    video:string[];
+    quizzes: string[]; 
+    documents: DocumentResource[]; // Pluriel
+    videos: Video[]; // Pluriel
 }
 
 export interface Quiz {
@@ -25,18 +37,3 @@ export interface Answer {
     isCorrect?: boolean;
 }
 
-export interface VideoResource {
-    id: number;
-    title: string;
-    description: string;
-    url: string; 
-    course: Course; 
-}
-
-export interface DocumentResource {
-    id: number;
-    title: string;
-    description: string;
-    fileUrl: string;
-    course: Course; 
-}
