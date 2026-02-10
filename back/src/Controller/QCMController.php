@@ -22,8 +22,8 @@ class QCMController extends AbstractController
         Request $request,
         DocumentRepository $documentRepository,
         VideoRepository $videoRepository,
-        EntityManagerInterface $em
-        //MistralService $mistralService
+        EntityManagerInterface $em,
+        MistralService $mistralService
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
