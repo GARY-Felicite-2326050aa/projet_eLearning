@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import {useAuth} from "../../features/auth/hooks/useAuth";
 import AuthCard from "../../features/auth/components/AuthCard";
 import { useNavigate } from "react-router-dom";
-import {useAuthStore} from "../../features/auth/store/auth.sotre";
+import {useAuthStore} from "../../features/auth/store/auth.store";
 
 export default function LoginPage() {
     const setUser = useAuthStore((state) => state.setUser);
