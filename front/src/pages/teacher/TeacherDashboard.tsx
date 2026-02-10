@@ -16,7 +16,7 @@ export default function TeacherDashboard() {
                 // Utilisation des endpoints de ton backend Symfony
                 const [coursesRes, resultsRes] = await Promise.all([
                     api.get('/courses'),
-                    api.get('/quiz_attempts')
+                    api.get('/quiz')
                 ]);
                 setCourses(coursesRes.data);
                 setResults(resultsRes.data);
